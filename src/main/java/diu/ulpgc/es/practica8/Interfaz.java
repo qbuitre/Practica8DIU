@@ -30,6 +30,7 @@ public class Interfaz extends javax.swing.JFrame {
     private Mat imgOr;
     private BufferedImage img;
     FileNameExtensionFilter filter = new FileNameExtensionFilter("Imágenes (*.jpg, *.png)", "jpg", "png");
+    private Mat imgMod;
     
 
     /**
@@ -85,6 +86,7 @@ public class Interfaz extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         archivoMenu = new javax.swing.JMenu();
         abrirMenu = new javax.swing.JMenuItem();
+        guardarMenu = new javax.swing.JMenuItem();
         cerrarAppMenu = new javax.swing.JMenuItem();
         editarMenu = new javax.swing.JMenu();
         umbralMenu = new javax.swing.JMenuItem();
@@ -119,6 +121,15 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
         archivoMenu.add(abrirMenu);
+
+        guardarMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        guardarMenu.setText("Guardar");
+        guardarMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarMenuActionPerformed(evt);
+            }
+        });
+        archivoMenu.add(guardarMenu);
 
         cerrarAppMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         cerrarAppMenu.setText("Cerrar aplicación");
@@ -200,11 +211,11 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_cerrarVentanasMenuActionPerformed
 
     private void umbralMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_umbralMenuActionPerformed
-        String res = JOptionPane.showInputDialog(null, "Introduce el valor de umbralizado","Umbralizar", JOptionPane.QUESTION_MESSAGE);
+        String res = JOptionPane.showInputDialog(this, "Introduce el valor de umbralizado","Umbralizar", JOptionPane.QUESTION_MESSAGE);
         if(res != null) {
             try {
                 int valor = Integer.parseInt(res);
-                Mat imgMod = umbral.umbralizar(imgOr, valor);
+                imgMod = umbral.umbralizar(imgOr, valor);
                 img = (BufferedImage) HighGui.toBufferedImage(imgMod);
                 InternalFrameImage ventana = new InternalFrameImage();
                 escritorio.add(ventana);
@@ -214,7 +225,7 @@ public class Interfaz extends javax.swing.JFrame {
                 ventana.setTitle(file.getName() + " / " + res);
                 umbral.setImagen(img);                
             } catch(NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null,"El valor introducido debe ser númerico");
+                JOptionPane.showMessageDialog(this,"El valor introducido debe ser númerico");
             }
         }
     }//GEN-LAST:event_umbralMenuActionPerformed
@@ -229,6 +240,14 @@ public class Interfaz extends javax.swing.JFrame {
     private void escritorioComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_escritorioComponentResized
         // TODO add your handling code here:
     }//GEN-LAST:event_escritorioComponentResized
+
+    private void guardarMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarMenuActionPerformed
+        int op = fc.showSaveDialog(this);
+        if(op == JFileChooser.APPROVE_OPTION) {
+            file = fc.getSelectedFile();
+            Imgcodecs.imwrite(file.getPath(), imgMod);
+        }
+    }//GEN-LAST:event_guardarMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,6 +291,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JMenuItem cerrarVentanasMenu;
     private javax.swing.JMenu editarMenu;
     private javax.swing.JDesktopPane escritorio;
+    private javax.swing.JMenuItem guardarMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem umbralMenu;
     // End of variables declaration//GEN-END:variables
